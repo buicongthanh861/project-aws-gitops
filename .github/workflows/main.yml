@@ -1,0 +1,4 @@
+name: gitops cicd aws
+on: [push]
+
+permissions: write-all
