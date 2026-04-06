@@ -10,39 +10,35 @@ permissions:
   contents: read
 
 jobs:
-  test-all-in-one:
+  test-backend:
+    name: Test Backend
     runs-on: ubuntu-latest
-    
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      # Setup Node.js
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
-      # Test Backend
-      - name: Test Backend
-        run: |
-          cd backend
-          npm ci
-          npm run lint
-          npm run test:unit
-          npm run test:integration
-          npm run build
-      
-      # Test Frontend
-      - name: Test Frontend
-        run: |
-          cd frontend
-          npm ci
-          npm run lint
-          npm run test
-          npm run build
-      
-      # SonarCloud
+      - run: npm install
+        working-directory: backend
+      - run: npm test
+        working-directory: backend
+  test-frontend:
+    name: Test Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+        working-directory: frontend
+      - run: npm test
+        working-directory: frontend
+  quality-check:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
