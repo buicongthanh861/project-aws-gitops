@@ -58,7 +58,7 @@ jobs:
       - name: Snyk Scan
         uses: snyk/actions/node@master
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN_AWS }}
         with:
           args: test --all-projects --severity-threshold=high
 
