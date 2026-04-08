@@ -51,16 +51,17 @@ jobs:
         uses: SonarSource/sonarqube-quality-gate-action@v1
         timeout-minutes: 5
         continue-on-error: true
-
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #synk check
-      - name: Snyk Scan
+      #synk check backend
+
+      - name: Snyk Scan Backend
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN_AWS }}
         with:
-          args: test --all-projects --severity-threshold=high
+          args: --org=buicongthanh861 --all-projects --severity-threshold=high
+        
 
   
   
