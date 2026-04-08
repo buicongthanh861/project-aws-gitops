@@ -61,7 +61,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN_AWS }}
         with:
           args: --org=buicongthanh861 --all-projects --severity-threshold=high
-          continue-on-error: true
+        continue-on-error: true
         
 
   
