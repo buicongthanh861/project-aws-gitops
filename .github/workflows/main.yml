@@ -10,35 +10,32 @@ permissions:
   contents: read
 
 jobs:
-  test-backend:
-    name: Test Backend
+  tesing-check:
+    name: Run tests and check code quality
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
-        working-directory: backend
-      - run: npm test
-        working-directory: backend
-  test-frontend:
-    name: Test Frontend
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: npm install
-        working-directory: frontend
-      - run: npm test
-        working-directory: frontend
-  quality-check:
-    name: SonarQube
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+      # check code backend test
+      - name: Install backend dependencies 
+        run: npm install
+        working-directory: ./backend
+      - name: Run backend tests
+        run: npm test
+        working-directory: ./backend
+      # check code frontend test
+      - name: Install frontend dependencies 
+        run: npm install
+        working-directory: ./frontend
+      - name: Run frontend tests
+        run: npm test
+        working-directory: ./frontend
+      
+      #sonarcloud check
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
@@ -49,6 +46,21 @@ jobs:
             -Dsonar.projectKey=buicongthanh861_project-aws-gitops
             -Dsonar.organization=java-woof
             -Dsonar.host.url=https://sonarcloud.io/
+      #sonarcloud quality gate check
+      - name: SonarCloud Quality Gate Check
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #synk check
+      - name: Snyk Scan
+        uses: snyk/actions@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: test --all-projects --severity-threshold=high
+
   
   
 
