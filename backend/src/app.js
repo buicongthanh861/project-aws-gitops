@@ -13,9 +13,17 @@ app.setPool = (p) => { pool = p; };
 app.get('/api/health', async (req, res) => {
   try {
     await pool.query('SELECT 1');
-    res.json({ status: 'ok', db: 'connected' });
+    res.json({ 
+      status: 'ok', 
+      db: 'connected',
+      version: 'Backend BCT Test v1'  // ← Thêm dòng này
+    });
   } catch {
-    res.json({ status: 'ok', db: 'disconnected' });
+    res.json({ 
+      status: 'ok', 
+      db: 'disconnected',
+      version: 'Backend BCT Test v1'  // ← Thêm dòng này luôn
+    });
   }
 });
 
