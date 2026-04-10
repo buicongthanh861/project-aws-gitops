@@ -8,7 +8,7 @@ metadata:
   annotations:
     argocd-image-updater.argoproj.io/image-list: frontend=159749281332.dkr.ecr.ap-southeast-1.amazonaws.com/project-aws-gitops-frontend
     argocd-image-updater.argoproj.io/frontend.update-strategy: latest
-    argocd-image-updater.argoproj.io/frontend.pull-secret: pullsecret:argocd/ecr-secret
+    argocd-image-updater.argoproj.io/frontend.pull-secret: pullsecret:argocd/aws-ecr-secret
     argocd-image-updater.argoproj.io/frontend.force-update: "true"
 
 spec:
