@@ -19,9 +19,7 @@ describe('GET /api/health', () => {
     const res = await request(app).get('/api/health');
 
     expect(res.statusCode).toBe(200);
-    // Sửa từ toEqual thành toMatchObject để linh hoạt với version
-    expect(res.body).toMatchObject({ status: 'ok', db: 'connected' });
-    expect(res.body).toHaveProperty('version'); // Chỉ check có field version
+    expect(res.body).toEqual({ status: 'ok', db: 'connected' });
   });
 
   it('trả về disconnected khi DB lỗi', async () => {
@@ -30,9 +28,7 @@ describe('GET /api/health', () => {
     const res = await request(app).get('/api/health');
 
     expect(res.statusCode).toBe(200);
-    // Sửa từ toEqual thành toMatchObject để linh hoạt với version
-    expect(res.body).toMatchObject({ status: 'ok', db: 'disconnected' });
-    expect(res.body).toHaveProperty('version'); // Chỉ check có field version
+    expect(res.body).toEqual({ status: 'ok', db: 'disconnected' });
   });
 });
 
