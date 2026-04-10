@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  fullstack-backend-deployment
+  namespace: fullstack-application
+  labels:
+    app:  fullstack-backend
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: backend=159749281332.dkr.ecr.ap-southeast-1.amazonaws.com/project-aws-gitops-backend
+    argocd-image-updater.argoproj.io/backend.update-strategy: latest
+    argocd-image-updater.argoproj.io/backend.pull-secret: pullsecret:argocd/ecr-secret
+    argocd-image-updater.argoproj.io/backend.force-update: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  fullstack-backend
+  template:
+    metadata:
+      labels:
+        app:  fullstack-backend
+    spec:
+      imagePullSecrets:
+        - name: aws-ecr-secret
+      containers:
+      - name:  fullstack-backend
+        image: 159749281332.dkr.ecr.ap-southeast-1.amazonaws.com/project-aws-gitops-backend:latest
+        env:
+        - name: DB_HOST
+          value: "postgres-service"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: "demo"
+        - name: DB_USER
+          value: "postgres"
+        - name: DB_PASSWORD
+          value: "postgres"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 3001

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  fullstack-frontend-deployment
+  namespace: fullstack-application
+  labels:
+    app:  fullstack-frontend
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: frontend=159749281332.dkr.ecr.ap-southeast-1.amazonaws.com/project-aws-gitops-frontend
+    argocd-image-updater.argoproj.io/frontend.update-strategy: latest
+    argocd-image-updater.argoproj.io/frontend.pull-secret: pullsecret:argocd/ecr-secret
+    argocd-image-updater.argoproj.io/frontend.force-update: "true"
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  fullstack-frontend
+  template:
+    metadata:
+      labels:
+        app:  fullstack-frontend
+    spec:
+      imagePullSecrets:
+        - name: aws-ecr-secret
+      containers:
+      - name:  fullstack-frontend
+        image: 159749281332.dkr.ecr.ap-southeast-1.amazonaws.com/project-aws-gitops-frontend:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 80

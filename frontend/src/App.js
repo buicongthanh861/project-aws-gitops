@@ -33,7 +33,7 @@ export default function App() {
 
   return (
     <div style={{ padding: 40, fontFamily: 'sans-serif', maxWidth: 600 }}>
-      <h1>Demo App</h1>
+      <h1>Demo App Fullstack - BCT devops</h1>
 
       <p>API: <b>{health?.status}</b> | DB: <b>{health?.db}</b></p>
 
