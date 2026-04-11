@@ -1,23 +1,22 @@
-#thong tin chung
 name: fullstack-frontend
 namespace: fullstack-application
 
 # -- Cấu hình image
 image:
   repository: 159749281332.dkr.ecr.ap-southeast-1.amazonaws.com/project-aws-gitops-frontend
-  tag: latest
+  tag: "latest" # Image Updater sẽ tự động ghi đè tag này bằng mã SHA khi chạy
   pullsecret: aws-ecr-secret
 
-# -- Số lượng replicas mặc định (HPA sẽ override nếu được bật)
+# -- Số lượng replicas
 replicaCount: 1
-minReplicas: 1
-maxReplicas: 3
 
 # -- Cấu hình ArgoCD Image Updater
 argocdImageUpdater:
   enabled: "true"
-  updateStrategy: latest
-  pullSecret: "pullsecret:argocd/aws-ecr-secret"
+  # Đổi từ latest -> digest để bắt image mới nhất theo thời gian push
+  updateStrategy: "digest"
+  # Sửa lại định dạng secret: <namespace>/<tên-secret>
+  pullSecret: "secret:fullstack-application/aws-ecr-secret"
   forceUpdate: "true"
 
 

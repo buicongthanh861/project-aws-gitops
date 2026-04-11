@@ -1,37 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  {{ .Values.name }}-deployment
+  name: {{ .Values.name }}-deployment
   namespace: {{ .Values.namespace }}
   labels:
-    app:  {{ .Values.name }}
+    app: {{ .Values.name }}
   annotations:
     argocd-image-updater.argoproj.io/image-list: "frontend={{ .Values.image.repository }}"
-    argocd-image-updater.argoproj.io/frontend.update-strategy: "{{ .Values.argocdImageUpdater.updateStrategy }}"
-    argocd-image-updater.argoproj.io/frontend.pull-secret: "{{ .Values.argocdImageUpdater.pullSecret }}"
-    argocd-image-updater.argoproj.io/frontend.force-update: "{{ .Values.argocdImageUpdater.forceUpdate }}"
-
+    argocd-image-updater.argoproj.io/frontend.update-strategy: "digest"
+    argocd-image-updater.argoproj.io/frontend.allow-tags: "regexp:^[0-9a-f]{40}$"
+    argocd-image-updater.argoproj.io/frontend.pull-secret: {{ .Values.argocdImageUpdater.pullSecret | quote }}
+    argocd-image-updater.argoproj.io/frontend.force-update: {{ .Values.argocdImageUpdater.forceUpdate | quote }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.replicaCount | default 1 }}
   selector:
     matchLabels:
-      app:  {{ .Values.name }}
+      app: {{ .Values.name }}
   template:
     metadata:
       labels:
-        app:  {{ .Values.name }}
+        app: {{ .Values.name }}
     spec:
       imagePullSecrets:
         - name: aws-ecr-secret
       containers:
-      - name:  {{ .Values.name }}
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+      - name: {{ .Values.name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         resources:
           limits:
-            memory: {{ .Values.resources.limits.memory }}
-            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory | quote }}
+            cpu: {{ .Values.resources.limits.cpu | quote }}
           requests:
-            memory: {{ .Values.resources.requests.memory }}
-            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory | quote }}
+            cpu: {{ .Values.resources.requests.cpu | quote }}
         ports:
         - containerPort: {{ .Values.service.targetPort }}
