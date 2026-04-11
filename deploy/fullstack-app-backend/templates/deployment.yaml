@@ -6,10 +6,10 @@ metadata:
   labels:
     app:  {{ .Values.name }}
   annotations:
-    argocd-image-updater.argoproj.io/image-list: backend={{ .Values.image.repository }}
-    argocd-image-updater.argoproj.io/backend.update-strategy: {{ .Values.argocdImageUpdater.updateStrategy }}
-    argocd-image-updater.argoproj.io/backend.pull-secret: {{ .Values.argocdImageUpdater.pullSecret }}
-    argocd-image-updater.argoproj.io/backend.force-update: {{ .Values.argocdImageUpdater.forceUpdate }}
+    argocd-image-updater.argoproj.io/image-list: "backend={{ .Values.image.repository }}"
+    argocd-image-updater.argoproj.io/backend.update-strategy: "{{ .Values.argocdImageUpdater.updateStrategy }}"
+    argocd-image-updater.argoproj.io/backend.pull-secret: "{{ .Values.argocdImageUpdater.pullSecret }}"
+    argocd-image-updater.argoproj.io/backend.force-update: "{{ .Values.argocdImageUpdater.forceUpdate }}"
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

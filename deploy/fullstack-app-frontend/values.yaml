@@ -15,7 +15,7 @@ maxReplicas: 3
 
 # -- Cấu hình ArgoCD Image Updater
 argocdImageUpdater:
-  enabled: true
+  enabled: "true"
   updateStrategy: latest
   pullSecret: "pullsecret:argocd/aws-ecr-secret"
   forceUpdate: "true"
@@ -38,14 +38,14 @@ service:
  
 # -- Cấu hình Ingress
 ingress:
-  enabled: true
+  enabled: "true"
   className: nginx
   host: localhost.frontend
   pathType: Prefix
  
 # -- Cấu hình HPA (Horizontal Pod Autoscaler)
 hpa:
-  enabled: true
+  enabled: "true"
   minReplicas: 1
   maxReplicas: 3
   cpuUtilization: 50
