@@ -56,52 +56,78 @@ export default function App() {
   };
 
   return (
-    <div style={{ padding: 40, fontFamily: 'sans-serif', maxWidth: 600 }}>
-      <h1>Demo App</h1>
-      <p>API: <b>{health?.status}</b> | DB: <b>{health?.db}</b></p>
+    <div style={{ 
+      minHeight: '100vh', 
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      padding: 40,
+      fontFamily: 'sans-serif'
+    }}>
+      <div style={{ 
+        maxWidth: 600, 
+        margin: '0 auto',
+        background: 'white',
+        borderRadius: 16,
+        padding: 32,
+        boxShadow: '0 20px 60px rgba(0,0,0,0.2)'
+      }}>
+        <h1 style={{ margin: '0 0 8px 0' }}>Demo App</h1>
+        <p style={{ margin: '0 0 20px 0' }}>
+          API: <b>{health?.status}</b> | DB: <b>{health?.db}</b>
+        </p>
 
-      <div style={{ display: 'flex', gap: 8, margin: '20px 0' }}>
-        <input
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && addMessage()}
-          placeholder="Nhập tin nhắn..."
-          style={{ flex: 1, padding: 8 }}
-        />
-        <button onClick={addMessage} style={{ padding: '8px 16px' }}>Thêm</button>
-      </div>
-
-      {messages.map(m => (
-        <div key={m.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #eee' }}>
-          {editingId === m.id ? (
-            <>
-              <input
-                value={editingContent}
-                onChange={e => setEditingContent(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') saveEdit(m.id);
-                  if (e.key === 'Escape') cancelEdit();
-                }}
-                aria-label="Chỉnh sửa tin nhắn"
-                style={{ flex: 1, padding: 6, marginRight: 8 }}
-                autoFocus
-              />
-              <button onClick={() => saveEdit(m.id)} style={{ marginRight: 4 }}>Lưu</button>
-              <button onClick={cancelEdit}>Huỷ</button>
-            </>
-          ) : (
-            <>
-              <span>{m.content}</span>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button onClick={() => startEdit(m)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#0070f3' }}>Sửa</button>
-                <button onClick={() => deleteMessage(m.id)} style={{ color: 'red', border: 'none', background: 'none', cursor: 'pointer' }}>Xoá</button>
-              </div>
-            </>
-          )}
+        <div style={{ display: 'flex', gap: 8, margin: '20px 0' }}>
+          <input
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && addMessage()}
+            placeholder="Nhập tin nhắn..."
+            style={{ flex: 1, padding: 8, borderRadius: 8, border: '1px solid #ddd' }}
+          />
+          <button onClick={addMessage} style={{ padding: '8px 16px', borderRadius: 8, background: '#667eea', color: 'white', border: 'none', cursor: 'pointer' }}>Thêm</button>
         </div>
-      ))}
 
-      {messages.length === 0 && <p style={{ color: '#999' }}>Chưa có tin nhắn nào.</p>}
+        {messages.map(m => (
+          <div key={m.id} style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            padding: '12px 0', 
+            borderBottom: '1px solid #eee',
+            background: editingId === m.id ? '#f9f9ff' : 'transparent',
+            borderRadius: 8,
+            paddingLeft: editingId === m.id ? 8 : 0,
+            paddingRight: editingId === m.id ? 8 : 0
+          }}>
+            {editingId === m.id ? (
+              <>
+                <input
+                  value={editingContent}
+                  onChange={e => setEditingContent(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') saveEdit(m.id);
+                    if (e.key === 'Escape') cancelEdit();
+                  }}
+                  aria-label="Chỉnh sửa tin nhắn"
+                  style={{ flex: 1, padding: 6, marginRight: 8, borderRadius: 6, border: '1px solid #667eea' }}
+                  autoFocus
+                />
+                <button onClick={() => saveEdit(m.id)} style={{ marginRight: 4, background: '#28a745', color: 'white', border: 'none', borderRadius: 4, padding: '4px 12px', cursor: 'pointer' }}>Lưu</button>
+                <button onClick={cancelEdit} style={{ background: '#6c757d', color: 'white', border: 'none', borderRadius: 4, padding: '4px 12px', cursor: 'pointer' }}>Huỷ</button>
+              </>
+            ) : (
+              <>
+                <span style={{ color: '#333' }}>{m.content}</span>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button onClick={() => startEdit(m)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#667eea' }}>Sửa</button>
+                  <button onClick={() => deleteMessage(m.id)} style={{ color: '#e74c3c', border: 'none', background: 'none', cursor: 'pointer' }}>Xoá</button>
+                </div>
+              </>
+            )}
+          </div>
+        ))}
+
+        {messages.length === 0 && <p style={{ color: '#999' }}>Chưa có tin nhắn nào.</p>}
+      </div>
     </div>
   );
 }

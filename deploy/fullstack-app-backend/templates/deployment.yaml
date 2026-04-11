@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{ .Values.name }}-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+    app:  {{ .Values.name }}
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: backend={{ .Values.image.repository }}
+    argocd-image-updater.argoproj.io/backend.update-strategy: {{ .Values.argocdImageUpdater.updateStrategy }}
+    argocd-image-updater.argoproj.io/backend.pull-secret: {{ .Values.argocdImageUpdater.pullSecret }}
+    argocd-image-updater.argoproj.io/backend.force-update: {{ .Values.argocdImageUpdater.forceUpdate }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app:  {{ .Values.name }}
+  template:
+    metadata:
+      labels:
+        app:  {{ .Values.name }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.image.pullsecret }}
+      containers:
+      - name:  {{ .Values.name }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        env:
+        - name: DB_HOST
+          value: {{ .Values.env.DB_HOST }}
+        - name: DB_PORT
+          value: {{ .Values.env.DB_PORT }}
+        - name: DB_NAME
+          value: {{ .Values.env.DB_NAME }}
+        - name: DB_USER
+          value: {{ .Values.env.DB_USER }}
+        - name: DB_PASSWORD
+          value: {{ .Values.env.DB_PASSWORD }}
+        resources:
+          limits:
+            memory: {{ .Values.resources.limits.memory }}
+            cpu: {{ .Values.resources.limits.cpu }}
+          requests:
+            memory: {{ .Values.resources.requests.memory }}
+            cpu: {{ .Values.resources.requests.cpu }}
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}

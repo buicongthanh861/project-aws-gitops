@@ -1,0 +1,60 @@
+#thong tin chung
+name: fullstack-backend
+namespace: fullstack-application
+
+# -- Cấu hình image
+image:
+  repository: 159749281332.dkr.ecr.ap-southeast-1.amazonaws.com/project-aws-gitops-backend
+  tag: latest
+  pullsecret: aws-ecr-secret
+
+# -- Số lượng replicas mặc định (HPA sẽ override nếu được bật)
+replicaCount: 1
+minReplicas: 1
+maxReplicas: 3
+
+# -- Cấu hình ArgoCD Image Updater
+argocdImageUpdater:
+  enabled: true
+  updateStrategy: latest
+  pullSecret: "pullsecret:argocd/aws-ecr-secret"
+  forceUpdate: "true"
+
+# -- Biến môi trường cho ứng dụng
+env:
+  DB_HOST: postgres-service
+  DB_PORT: "5432"
+  DB_NAME: demo
+  DB_USER: postgres
+  DB_PASSWORD: postgres
+
+# -- Cấu hình resources
+resources:
+  limits:
+    memory: "128Mi"
+    cpu: "500m"
+  requests:
+    memory: "64Mi"
+    cpu: "250m"
+
+# -- Cổng ứng dụng
+service:
+  type: ClusterIP
+  port: 3001
+  targetPort: 3001
+ 
+# -- Cấu hình Ingress
+ingress:
+  enabled: true
+  className: nginx
+  host: localhost.backend
+  path: /api
+  pathType: Prefix
+ 
+# -- Cấu hình HPA (Horizontal Pod Autoscaler)
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  cpuUtilization: 50
+

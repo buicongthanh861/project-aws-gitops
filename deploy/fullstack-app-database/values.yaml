@@ -1,0 +1,36 @@
+name: postges
+namespace: fullstack-application
+ 
+image:
+  repository: postgres
+  tag: "15"
+  pullPolicy: IfNotPresent
+ 
+replicaCount: 1
+ 
+# -- Biến môi trường PostgreSQL
+env:
+  POSTGRES_DB: "demo"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "postgres"
+ 
+# -- Cấu hình Service (Headless)
+service:
+  port: 5432
+  targetPort: 5432
+ 
+# -- Persistent Volume Claim cho mỗi pod
+storage:
+  size: 1Gi
+  accessMode: ReadWriteOnce
+  # storageClassName: ""   # Bỏ comment nếu muốn chỉ định StorageClass cụ thể
+ 
+# -- Resource limits & requests (tuỳ chọn)
+resources: {}
+  # limits:
+  #   memory: "512Mi"
+  #   cpu: "500m"
+  # requests:
+  #   memory: "256Mi"
+  #   cpu: "250m"
+ 

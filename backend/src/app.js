@@ -5,9 +5,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// pool được inject từ ngoài vào để dễ mock khi test
 let pool;
-
 app.setPool = (p) => { pool = p; };
 
 app.get('/api/health', async (req, res) => {
@@ -29,6 +27,15 @@ app.post('/api/messages', async (req, res) => {
   const result = await pool.query(
     'INSERT INTO messages (content) VALUES ($1) RETURNING *',
     [content]
+  );
+  res.json(result.rows[0]);
+});
+
+app.put('/api/messages/:id', async (req, res) => {
+  const { content } = req.body;
+  const result = await pool.query(
+    'UPDATE messages SET content = $1 WHERE id = $2 RETURNING *',
+    [content, req.params.id]
   );
   res.json(result.rows[0]);
 });

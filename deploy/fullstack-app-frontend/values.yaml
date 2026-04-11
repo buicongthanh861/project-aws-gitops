@@ -1,0 +1,52 @@
+#thong tin chung
+name: fullstack-frontend
+namespace: fullstack-application
+
+# -- Cấu hình image
+image:
+  repository: 159749281332.dkr.ecr.ap-southeast-1.amazonaws.com/project-aws-gitops-frontend
+  tag: latest
+  pullsecret: aws-ecr-secret
+
+# -- Số lượng replicas mặc định (HPA sẽ override nếu được bật)
+replicaCount: 1
+minReplicas: 1
+maxReplicas: 3
+
+# -- Cấu hình ArgoCD Image Updater
+argocdImageUpdater:
+  enabled: true
+  updateStrategy: latest
+  pullSecret: "pullsecret:argocd/aws-ecr-secret"
+  forceUpdate: "true"
+
+
+# -- Cấu hình resources
+resources:
+  limits:
+    memory: "128Mi"
+    cpu: "500m"
+  requests:
+    memory: "64Mi"
+    cpu: "250m"
+
+# -- Cổng ứng dụng
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+ 
+# -- Cấu hình Ingress
+ingress:
+  enabled: true
+  className: nginx
+  host: localhost.frontend
+  pathType: Prefix
+ 
+# -- Cấu hình HPA (Horizontal Pod Autoscaler)
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  cpuUtilization: 50
+
