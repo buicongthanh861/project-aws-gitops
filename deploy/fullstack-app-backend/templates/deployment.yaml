@@ -1,47 +1,48 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  {{ .Values.name }}-deployment
+  name: {{ .Values.name }}-deployment
   namespace: {{ .Values.namespace }}
   labels:
-    app:  {{ .Values.name }}
+    app: {{ .Values.name }}
   annotations:
     argocd-image-updater.argoproj.io/image-list: "backend={{ .Values.image.repository }}"
-    argocd-image-updater.argoproj.io/backend.update-strategy: "{{ .Values.argocdImageUpdater.updateStrategy }}"
-    argocd-image-updater.argoproj.io/backend.pull-secret: "{{ .Values.argocdImageUpdater.pullSecret }}"
-    argocd-image-updater.argoproj.io/backend.force-update: "{{ .Values.argocdImageUpdater.forceUpdate }}"
+    argocd-image-updater.argoproj.io/backend.update-strategy: "digest"
+    argocd-image-updater.argoproj.io/backend.allow-tags: "regexp:^[0-9a-f]{40}$"
+    argocd-image-updater.argoproj.io/backend.pull-secret: {{ .Values.argocdImageUpdater.pullSecret | quote }}
+    argocd-image-updater.argoproj.io/backend.force-update: {{ .Values.argocdImageUpdater.forceUpdate | quote }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.replicaCount | default 1 }}
   selector:
     matchLabels:
-      app:  {{ .Values.name }}
+      app: {{ .Values.name }}
   template:
     metadata:
       labels:
-        app:  {{ .Values.name }}
+        app: {{ .Values.name }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.image.pullsecret }}
       containers:
-      - name:  {{ .Values.name }}
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+      - name: {{ .Values.name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         env:
         - name: DB_HOST
-          value: {{ .Values.env.DB_HOST }}
+          value: {{ .Values.env.DB_HOST | quote }}
         - name: DB_PORT
-          value: {{ .Values.env.DB_PORT }}
+          value: {{ .Values.env.DB_PORT | quote }}
         - name: DB_NAME
-          value: {{ .Values.env.DB_NAME }}
+          value: {{ .Values.env.DB_NAME | quote }}
         - name: DB_USER
-          value: {{ .Values.env.DB_USER }}
+          value: {{ .Values.env.DB_USER | quote }}
         - name: DB_PASSWORD
-          value: {{ .Values.env.DB_PASSWORD }}
+          value: {{ .Values.env.DB_PASSWORD | quote }}
         resources:
           limits:
-            memory: {{ .Values.resources.limits.memory }}
-            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory | quote }}
+            cpu: {{ .Values.resources.limits.cpu | quote }}
           requests:
-            memory: {{ .Values.resources.requests.memory }}
-            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory | quote }}
+            cpu: {{ .Values.resources.requests.cpu | quote }}
         ports:
         - containerPort: {{ .Values.service.targetPort }}

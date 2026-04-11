@@ -1,32 +1,32 @@
-#thong tin chung
+# -- Thông tin chung
 name: fullstack-backend
 namespace: fullstack-application
 
 # -- Cấu hình image
 image:
   repository: 159749281332.dkr.ecr.ap-southeast-1.amazonaws.com/project-aws-gitops-backend
-  tag: latest
+  tag: "latest" # Image Updater sẽ tự động ghi đè tag này bằng mã SHA khi chạy
   pullsecret: aws-ecr-secret
 
-# -- Số lượng replicas mặc định (HPA sẽ override nếu được bật)
+# -- Số lượng replicas
 replicaCount: 1
-minReplicas: 1
-maxReplicas: 3
 
 # -- Cấu hình ArgoCD Image Updater
 argocdImageUpdater:
   enabled: "true"
-  updateStrategy: latest
-  pullSecret: "pullsecret:argocd/aws-ecr-secret"
+  # Đổi từ latest -> digest để bắt image mới nhất theo thời gian push
+  updateStrategy: "digest"
+  # Sửa lại định dạng secret: <namespace>/<tên-secret>
+  pullSecret: "secret:fullstack-application/aws-ecr-secret"
   forceUpdate: "true"
 
-# -- Biến môi trường cho ứng dụng
+# -- Biến môi trường cho ứng dụng (Dùng nháy cho tất cả giá trị để an toàn)
 env:
-  DB_HOST: postgres-service
+  DB_HOST: "postgres-service"
   DB_PORT: "5432"
-  DB_NAME: demo
-  DB_USER: postgres
-  DB_PASSWORD: postgres
+  DB_NAME: "demo"
+  DB_USER: "postgres"
+  DB_PASSWORD: "postgres"
 
 # -- Cấu hình resources
 resources:
@@ -46,15 +46,14 @@ service:
 # -- Cấu hình Ingress
 ingress:
   enabled: "true"
-  className: nginx
-  host: localhost.backend
-  path: /api
-  pathType: Prefix
+  className: "nginx"
+  host: "localhost.backend"
+  path: "/api"
+  pathType: "Prefix"
  
-# -- Cấu hình HPA (Horizontal Pod Autoscaler)
+# -- Cấu hình HPA
 hpa:
   enabled: true
   minReplicas: 1
   maxReplicas: 3
   cpuUtilization: 50
-
