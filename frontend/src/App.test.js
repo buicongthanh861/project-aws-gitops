@@ -1,8 +1,7 @@
-import { vi } from "vitest"
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from './App';
 
-global.fetch = vi.fn();
+global.fetch = jest.fn();
 
 const mockHealth = { status: 'ok', db: 'connected' };
 const mockMessages = [
@@ -10,7 +9,7 @@ const mockMessages = [
   { id: 2, content: 'World', created_at: '2024-01-02' },
 ];
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => jest.clearAllMocks());
 
 // ─── Hiển thị ────────────────────────────────────────────────────────────────
 describe('App - hiển thị', () => {
