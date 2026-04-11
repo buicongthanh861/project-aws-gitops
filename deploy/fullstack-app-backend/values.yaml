@@ -22,7 +22,7 @@ argocdImageUpdater:
 
 # -- Biến môi trường cho ứng dụng (Dùng nháy cho tất cả giá trị để an toàn)
 env:
-  DB_HOST: "postgres-service"
+  DB_HOST: "postges-service"
   DB_PORT: "5432"
   DB_NAME: "demo"
   DB_USER: "postgres"

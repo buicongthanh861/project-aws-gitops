@@ -35,7 +35,7 @@ spec:
           value: {{ .Values.env.DB_NAME | quote }}
         - name: DB_USER
           value: {{ .Values.env.DB_USER | quote }}
-        - name: DB_PASSWORD
+        - name: DB_PASS
           value: {{ .Values.env.DB_PASSWORD | quote }}
         resources:
           limits:
